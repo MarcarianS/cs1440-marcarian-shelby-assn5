@@ -1,31 +1,26 @@
-*Replace the bold text with your own content*
-
-*Adapted from https://htdp.org/2020-5-6/Book/part_preface.html*
-
 # 0.  From Problem Analysis to Data Definitions
 
-**Problem Analysis is the process of understanding the problem the software
-will address and to document in detail what the software system needs to do.
-In the real world this phase demands close interaction between developers and
-the client.  Ideally, end-users of the system are interviewed for their input.**
-
-**In this course you will receive detailed requirements in the form of the
-assignment description.  I stand-in for the client and end-users when you have
-questions concerning their needs and desires.**
-
-**In this phase of the design process you should use [The Feynman
-Technique](https://www.youtube.com/watch?v=tkm0TNFzIeg) To ensure that you
-understand what is being asked of you.**
-
-**The output of this phase of the development process is a restatement of the
-requirements in your own words.  Putting new problems into your own words will
-help you identify your "Known knowns" and your "known unknowns".**
-
-**As part of your restatement of the problem identify information that must be
-represented and decide how to represent in the chosen programming language.**
-
-**Formulate data definitions and illustrate them with examples.**
-
+- print an error if the user did not give a url and close the program
+- otherwise, check if the url is an absolute url py parsing and checking for scheme and netloc
+- catch error here, if it is not an abs path print message
+- set maxDepth to 3 unless the user passed in sys.argv[2]
+- catch invalid input here, must input a positive integer
+- call crawl with parameters url, maxdepth, depth=0, and visited
+- Base cases: No unvisited links are found or
+- maximum recursion depth is reached (default 3, can specify on CLI)
+- needs to know what depth is at (kept track of in a parameter)
+- Based on the current depth of recursion, print appropriate indentation and the url
+- encase all of crawl in a try catch 
+- create a request for the url supplied called response
+- if response is not a valid response, ignore the link and the recursion continues for the rest of its sibling and parent links
+- print the reason the link did not work
+- create a beautiful soup html object with the response.text and 'html.parser'
+- use html.find_all('a') to create a list of links on the page
+- for each link, make sure it is a hyperlink (has 'a' anchor tag and href attribute)
+- craete absolute address and print as long as it begins with http
+- trim the fragments off by slicing anything after '#'
+- check if the address is in visited, if not, call crawl with absoluteURL, maxdepth, depth +1, and visited
+- add the absoluteURL to the visited set
 
 # 1.  System Analysis
 
