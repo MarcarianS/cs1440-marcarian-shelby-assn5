@@ -8,7 +8,7 @@ from urllib.parse import urlparse, urljoin
 import sys
 
 
-def crawl(url):
+def crawl(url, maxDepth, depth, visited):
     """
     Given an absolute URL, print each hyperlink found within the document.
 
@@ -22,13 +22,15 @@ def crawl(url):
     assignment.
     """
 
-    print("\tTODO: Check the current depth of recursion; return now if you have gone too deep")
+    if depth >= maxDepth:
+        return
     try:
-        print("\tTODO: Print this URL with indentation indicating the current depth of recursion")
+        for i in range(depth + 1):
+            print("    ", end='')
         response = requests.get(url)
         if not response.ok:
-            print(f"crawl({url}): {r.status_code} {r.reason}")
-            return 
+            print(f"crawl({url}): {response.status_code} {response.reason}")
+            return
 
         html = BeautifulSoup(response.text, 'html.parser')
         links = html.find_all('a')
@@ -40,12 +42,11 @@ def crawl(url):
                 
                 # Only deal with resources accessible over HTTP or HTTPS
                 if absoluteURL.startswith('http'):
-                    print(absoluteURL)
-
-        print("\n\tTODO: Don't just print URLs found in this document, visit them!")
-        print("\tTODO: Trim fragments ('#' to the end) from URLs")
-        print("\tTODO: Use a `set` data structure to keep track of URLs you've already visited")
-        print("\tTODO: Call crawl() on unvisited URLs")
+                    url = absoluteURL.split('#')[0]
+                    if url not in visited:
+                        print(url)
+                        visited.add(url)
+                        crawl(url, maxDepth, depth + 1, visited)
 
     except Exception as e:
         print(f"crawl(): {e}")
@@ -65,18 +66,20 @@ if parsed.scheme == '' or parsed.netloc == '':
     sys.exit(1)
 
 maxDepth = 3
-if sys.argv[2].isnumeric() and sys.argv[2] >= 0:
-    maxDepth = sys.argv[2]
-else:
-    print("Error: Invalid crawl depth\nPlease enter a positive integer.")
-    sys.exit(1)
+if len(sys.argv) > 2:
+    if sys.argv[2].isnumeric() and int(sys.argv[2]) >= 0:
+        maxDepth = int(sys.argv[2])
+    else:
+        print("Error: Invalid crawl depth\nPlease enter a positive integer.")
+        sys.exit(1)
 
 plural = 's'
 if maxDepth == 1:
     plural = ''
 
+visited = set()
+depth = 0
 print(f"Crawling from {url} to a maximum depth of {maxDepth} link{plural}")
-print("\tTODO: crawl() keeps track of the max depth itself: no globals allowed!")
-crawl(url)
+print(url)
+crawl(url, maxDepth, depth, visited)
 
-print("\tTODO: delete each TODO message as you fulfill it")
