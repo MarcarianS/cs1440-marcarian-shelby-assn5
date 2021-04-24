@@ -24,21 +24,91 @@
 
 # 1.  System Analysis
 
-**Analyze the flow of data throughout the program.  Does the program get input
-from the user?  If so, does it come from interactive prompts or from
-command-line arguments?  Is data incorporated from a file on the disk, from a
-database or from the internet?**
+## Main
+* Input: sys.argv and an optional integer from teh command line
+* Internal Data:
+	* print an error if the user did not give a url and close the program
+	* otherwise, check if the url is an absolute url py parsing and checking for scheme and netloc
+	* catch error here, if it is not an abs path print message
+	* set maxDepth to 3 unless the user passed in sys.argv[2]
+	* catch invalid input here, must input a positive integer
+	* call crawl with parameters url, maxdepth, depth=0, and visited
+* Output: Nothing
+* Function Stub:
+```
+if len(sys.argv) < 2
+	print error
+	sys.exit
+else
+	url = sys.argv[1]
+parsed = urlparse(url)
+if parsed.scheme == "" or parsed.netloc == ""
+	print error
+	sys.exit
+if sys.argv[2].isnumeric and > 0
+	maxdepth = 3
+elif < 0
+	error, sys.exit
+else
+	maxdepth = 3
+plural = s
+if maxdepth == 1
+	plural = ''
+print (crawling from url to maxdepth of link plural)
+crawl(url, maxdepth, depth=0, visited)
+```
 
-**How is output given?  On the screen in the form of text or graphics?  Are
-output files created, and what form do they take?**
+## Crawl(url, maxdepth, depth, visited)
+* Input: 
+	* url, string of an absolute url
+	* maxdepth, positive integer to crawl to, default 3
+	* depth, current level we are crawling at, intially 0
+	* visited, set of urls that have already been visited (strings)
+* Internal Data: 
+	*  Base cases: No unvisited links are found or
+	* maximum recursion depth is reached (default 3, can specify on CLI)
+	* needs to know what depth is at (kept track of in a parameter)
+	* Based on the current depth of recursion, print appropriate indentation and the url
+	* encase all of crawl in a try catch
+	* create a request for the url supplied called response
+	* if response is not a valid response, ignore the link and the recursion continues for the rest of its siblin>
+	* print the reason the link did not work
+	* create a beautiful soup html object with the response.text and 'html.parser'
+	* use html.find_all('a') to create a list of links on the page
+	* for each link, make sure it is a hyperlink (has 'a' anchor tag and href attribute)
+	* craete absolute address and print as long as it begins with http
+	* trim the fragments off by slicing anything after '#'
+	* check if the address is in visited, if not, call crawl with absoluteURL, maxdepth, depth +1, and visited
+	* add the absoluteURL to the visited set
+* Output: prints urls to the user
+* Function Stub:
+```
+if depth > maxdepth
+	return
+try
+	for i in rnage(depth)
+		print(\t)
+	reponse = requests.get(url)
+	if not response.ok	
+		print error
+	return
 
-**Identify the non-trivial formulas you need to create.  If there aren't any then
-state "no formulas" in this section.**
-
-**State what kind of data each desired function consumes and produces.  Formulate
-a concise description of what the function computes.  Define a stub that lives
-up to the signature.**
-
+	html = beautifulSoup(response.text, html.parser)
+	links = html.find_all('a")
+	for a in links
+		links = a.get(href)
+		if link
+			absolute = urljoin(url, link)
+			if absolute.startswith('http")
+				print(absolute)
+				url = absolute.split("#")[0]
+				if url !in visited
+					visited.add(url)
+					crawl(url, maxdepth, depth++, visited
+except Exception as e:
+	print(f"crawl(): {e}")
+return				
+```
 
 # 2.  Functional Examples
 

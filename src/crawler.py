@@ -59,10 +59,17 @@ if len(sys.argv) < 2:
 else:
     url = sys.argv[1]
 
-print("\tTODO: determine whether variable `url` contains an absolute URL")
+parsed = urlparse(url)
+if parsed.scheme == '' or parsed.netloc == '':
+    print("Error: Invalid URL supplied\nPlease supply an absolute URL to this program")
+    sys.exit(1)
 
-print("\tTODO: allow the user to optionally override the default recursion depth of 3")
 maxDepth = 3
+if sys.argv[2].isnumeric() and sys.argv[2] >= 0:
+    maxDepth = sys.argv[2]
+else:
+    print("Error: Invalid crawl depth\nPlease enter a positive integer.")
+    sys.exit(1)
 
 plural = 's'
 if maxDepth == 1:
