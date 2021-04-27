@@ -25,8 +25,6 @@ def crawl(url, maxDepth, depth, visited):
     if depth >= maxDepth:
         return
     try:
-        for i in range(depth + 1):
-            print("    ", end='')
         response = requests.get(url)
         if not response.ok:
             print(f"crawl({url}): {response.status_code} {response.reason}")
@@ -44,8 +42,10 @@ def crawl(url, maxDepth, depth, visited):
                 if absoluteURL.startswith('http'):
                     url = absoluteURL.split('#')[0]
                     if url not in visited:
-                        print(url)
                         visited.add(url)
+                        for i in range(depth + 1):
+                            print("    ", end='')
+                        print(url)
                         crawl(url, maxDepth, depth + 1, visited)
 
     except Exception as e:
@@ -77,9 +77,10 @@ plural = 's'
 if maxDepth == 1:
     plural = ''
 
-visited = set()
+
 depth = 0
 print(f"Crawling from {url} to a maximum depth of {maxDepth} link{plural}")
 print(url)
+visited = {url}
 crawl(url, maxDepth, depth, visited)
 

@@ -45,17 +45,21 @@ parsed = urlparse(url)
 if parsed.scheme == "" or parsed.netloc == ""
 	print error
 	sys.exit
-if sys.argv[2].isnumeric and > 0
-	maxdepth = 3
-elif < 0
-	error, sys.exit
-else
-	maxdepth = 3
+maxdepth = 3
+if sys.argv > 2
+	if sys.argv[2].isnumeric() and int(sys.argv[2]) >= 0
+		maxdepth = int(sys.argv[2])
+	else 
+		print error
+		sys.exit
 plural = s
 if maxdepth == 1
 	plural = ''
+depth = 0
 print (crawling from url to maxdepth of link plural)
-crawl(url, maxdepth, depth=0, visited)
+print(url)
+visited = {url}
+crawl(url, maxdepth, depth, visited)
 ```
 
 ## Crawl(url, maxdepth, depth, visited)
@@ -83,11 +87,9 @@ crawl(url, maxdepth, depth=0, visited)
 * Output: prints urls to the user
 * Function Stub:
 ```
-if depth > maxdepth
+if depth >= maxdepth
 	return
 try
-	for i in rnage(depth)
-		print(\t)
 	reponse = requests.get(url)
 	if not response.ok	
 		print error
@@ -100,10 +102,13 @@ try
 		if link
 			absolute = urljoin(url, link)
 			if absolute.startswith('http")
-				print(absolute)
 				url = absolute.split("#")[0]
+
 				if url !in visited
 					visited.add(url)
+					for i in range(depth + 1)
+						print("    ", end)
+					print(absolute)
 					crawl(url, maxdepth, depth++, visited
 except Exception as e:
 	print(f"crawl(): {e}")
